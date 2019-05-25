@@ -3,9 +3,13 @@ const Route = express.Router();
 
 
 Route.get('/', (req, res) => {
+  if(req.session.loggedIn){
     return res.render('main', {
       avatar: req.session.avatar
     });
+  }
+  res.redirect('/')
+    
 })
 
 Route.get("/dashboard", (req, res) => {

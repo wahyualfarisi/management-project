@@ -2,7 +2,11 @@ const express = require("express");
 const Route = express.Router();
 
 Route.get("/", (req, res) => {
- return res.render('pages/authentication/auth')
+ if(!req.session.loggedIn){
+   return res.render('pages/authentication/auth')
+ }
+ res.redirect('/owner')
+ 
 });
 
 
