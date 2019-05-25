@@ -15,13 +15,13 @@ app.use(
   })
 );
 
-if(process.env.PORT) {
-  app.use(function(request, response){
-    if(!request.secure){
-      response.redirect("https://" + request.headers.host + request.url);
-    }
-  });
-}
+// if(process.env.PORT) {
+//   app.use(function(request, response){
+//     if(!request.secure){
+//       response.redirect("https://" + request.headers.host + request.url);
+//     }
+//   });
+// }
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
