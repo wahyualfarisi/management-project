@@ -58,9 +58,9 @@ Author: SAEROX
                                     <img src="static/assets/img/logo.png" alt="logo">
                                 </a>
                             </div>
-                            <h1>Join Our Community</h1>
+                            <h1>Management Project</h1>
                             <span class="description">
-                                Etiam consequat urna at magna bibendum, in tempor arcu fermentum vitae mi massa egestas. 
+                                create task project with your team
                             </span>
                             <ul class="login-nav nav nav-tabs mt-5 justify-content-center" role="tablist" id="animate-tab">
                                 <li><a class="active" data-toggle="tab" href="#singin" role="tab" id="singin-tab" data-easein="zoomInUp">Sign In</a></li>
@@ -78,20 +78,20 @@ Author: SAEROX
                             <!-- Begin Sign In -->
                             <div role="tabpanel" class="tab-pane show active" id="singin" aria-labelledby="singin-tab">
                                 <h3>Sign In To Elisyam</h3>
-                                <form>
+                                <form id="form-login" novalidate>
                                     <div class="group material-input">
-        							    <input type="text" required>
+        							    <input type="text" id="email_login" name="email" required>
         							    <span class="highlight"></span>
         							    <span class="bar"></span>
         							    <label>Email</label>
                                     </div>
                                     <div class="group material-input">
-        							    <input type="password" required>
+        							    <input type="password" id="password_login" name="password" required>
         							    <span class="highlight"></span>
         							    <span class="bar"></span>
         							    <label>Password</label>
                                     </div>
-                                </form>
+                                
                                 <div class="row">
                                     <div class="col text-left">
                                         <div class="styled-checkbox">
@@ -104,10 +104,11 @@ Author: SAEROX
                                     </div>
                                 </div>
                                 <div class="sign-btn text-center">
-                                    <a href="db-default.html" class="btn btn-lg btn-gradient-01">
+                                    <button type="submit" class="btn btn-lg btn-gradient-01">
                                         Sign In
-                                    </a>
+                                    </button>
                                 </div>
+                                </form>
                             </div>
                             <!-- End Sign In -->
                             <!-- Begin Sign Up -->

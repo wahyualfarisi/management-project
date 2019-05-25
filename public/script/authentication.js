@@ -5,7 +5,11 @@ const authDOM = {
     fieldPass2: '#password2',
     fieldJobs: '#jobs',
     fieldGituser: '#githubusername',
-    formRegister: '#form-register'
+    formRegister: '#form-register',
+
+    formLogin: '#form-login',
+    fieldEmailLog: '#email_login',
+    fieldPassLog: '#password_login'
 }
 
 class Authentication {
@@ -26,7 +30,7 @@ class Authentication {
             githubusername: this.gitusername
         }
          $.ajax({
-            url: `/owner/register`,
+            url: `/api/owner/register`,
             method: 'post',
             data: data,
             success: function(data){
@@ -42,8 +46,36 @@ class Authentication {
                 notifications(err.responseJSON.msg)          
             }
         })
-        
     }
+
+    signIn(){
+        var data = {
+            email: this.email,
+            password: this.password
+        }
+
+        $.ajax({
+            url: `/api/owner/login`,
+            method: 'post',
+            data: data,
+            success: function(data){
+                if(data.login){
+                     localStorage.setItem('privatesite', JSON.stringify(data));
+                     window.location.href = '/owner';
+                }else{
+                    console.log('salah')
+                }
+                
+            },
+            error: function(err){
+                if(err.responseJSON.errors){
+                    return err.responseJSON.errors.forEach(msg => notifications(msg.msg))
+                }
+                notifications(err.responseJSON[0].email)  
+            }
+        })
+    }
+
 }
 
 const eventListener = function(){
@@ -70,6 +102,25 @@ const eventListener = function(){
             return notifications('Field Empty')
         }
     });
+
+    $(authDOM.formLogin).on('submit', e => {
+        e.preventDefault();
+        var email, password;
+        email = $(authDOM.fieldEmailLog).val()
+        password = $(authDOM.fieldPassLog).val()
+
+        if($.trim(email) !== ""){
+            if($.trim(password) !== ""){
+                var login = new Authentication(email, password, null, null, null);
+                login.signIn()
+            }else{
+                return notifications('Password is required')
+            }
+        }else{
+            return notifications('Email is required')
+        }
+
+    })
 
  
    

@@ -24,19 +24,24 @@ app.set("view engine", "ejs");
 /**
  * main url
  */
+
 app.use("/", require("./routes/main"));
+
+app.use('/owner', require('./routes/owner'));
+// app.use('/dashboard', require('./routes/dashboard'))
 
 /**
  *auth process
  */
-app.use("/auth", require("./routes/login"));
+// app.use("/auth", require("./routes/login"));
+
 
 
 /**
  *API route 
  */
-app.use('/owner', require('./routes/api/owner'));
-
+app.use('/api/owner', require('./routes/api/owner'));
+app.use('/api/project', require('./routes/api/project'));
 
 
 app.listen(port, () => {

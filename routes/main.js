@@ -1,23 +1,17 @@
 const express = require("express");
 const Route = express.Router();
-const path = require("path");
 
 Route.get("/", (req, res) => {
-  if (req.session.loggedin) {
-    return res.render("main"); // included header sidbar , on loaded content with hashchange
-  }
-  res.render("pages/authentication/auth", {
-    title: "Login page"
-  });
+ return res.render('pages/authentication/auth')
 });
 
-//home
-Route.get("/dashboard", (req, res) => {
-  res.render("pages/home");
-});
 
-Route.get("/activity", (req, res) => {
-  res.render("pages/activity");
-});
+
+
+Route.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    res.redirect('/');
+  })
+})
 
 module.exports = Route;

@@ -11,3 +11,15 @@ function notifications(text){
         }
     }).show()
 }
+
+// function makeNotif(text){
+//     setTimeout(() => {
+//         new Noty({
+//             type: 'notification',
+//             layout: 'topRight',
+//             text: text,
+//             progressBar: true,
+//         }).show()
+//     }, 5000)
+
+// }
