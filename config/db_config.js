@@ -20,4 +20,4 @@ const db_production  = mysql.createConnection({
 //   console.log("connected");
 // });
 
-module.exports = process.env.PORT ? db_production : db_development ;
+module.exports = db_development ;
