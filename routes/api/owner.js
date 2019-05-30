@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const uuid = require('uuid');
 const db  = require('./../../config/db_config');
 const config = require('config');
+const request = require('request');
 const auth = require('./../../middleware/auth');
 const { check, validationResult } = require('express-validator/check');
 
@@ -34,8 +35,11 @@ Router.post('/updateprofile', [
                               `;
                     db.query(sql, (err, results) => {
                         if(err) return res.status(400).json({ msg: 'something wrong' })
+                        req.session.destroy(err => {
+                            res.json({ code: 1, msg: 'update success, please sign in agaian' })
+                        })
+                        
 
-                        res.json({ code: 1, msg: 'update success' })
                     })
                 }else{
                     res.send('error')
@@ -135,8 +139,6 @@ Router.post('/login', [
                 errors.email = 'User not found';
                 return res.status(404).json([errors])
             }
-
-
             bcrypt.compare(password, results[0].password).then(isMatch => {
                 if(isMatch){
                     //create payload 
@@ -154,15 +156,20 @@ Router.post('/login', [
                         req.session.fullname = results[0].fullname;
                         req.session.email = results[0].email;
                         req.session.avatar = results[0].avatar;
+                        req.session.githubusername = results[0].githubusername
 
                         res.json({
                             token,
+                            email: results[0].email,
+                            githubusername: results[0].githubusername,
                             msg: 'Login Success',
                             login: true
                         })
                     })
-
+                }else{
+                    res.json({ msg: 'Email And password incorrect !' })
                 }
+
             })
         })
 
@@ -189,6 +196,104 @@ Router.get('/current', auth, (req, res) => {
         res.status(500).send('server error')
     }
 });
+
+/**
+ *@desc fetch github repository
+ *@method GET
+ */
+
+Router.get('/github/:username', (req, res) => {
+    const options = {
+        uri: `https://api.github.com/users/${req.params.username}/repos?per_page=15&sort=created:asc&client_id=${config.get("githubClientId")}&client_secret=${config.get("githubClientSecret")}`,
+        method: 'GET',
+        headers: { "user-agent": "node.js"}
+    };
+
+    request(options, (err, response, body) => {
+        if(err) return  res.json(err);
+
+        if(response.statusCode !== 200) return  res.status(400).json({ msg: 'No Github Profile' })
+
+        res.json(JSON.parse(body))
+    })
+
+})
+
+/**
+ *@desc Change password
+ *@method POST
+ */
+ Router.post('/change-password', [
+     auth,
+     check('current_password', 'Current password is required').not().isEmpty()
+ ], (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(400).json({ errors: errors.array() } );
+
+    const { current_password } = req.body;
+    try {
+        let sql = `SELECT * FROM t_owner WHERE email_owner = '${req.user.email}' `;
+        db.query(sql, (err, results) => {
+            if(err) return res.status(400).send('Something wrong');
+
+            if(results.length === 0) return  res.status(400).json({ msg: 'owner not found' });
+
+            bcrypt.compare(current_password, results[0].password).then(isMatch => {
+                if(!isMatch) return res.status(400).json({ msg: 'Password not match' });
+                res.json({ status: 1, msg: 'Password Confirmed ' })
+            })
+
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Server Error');
+    }
+ });
+
+ /**
+ *@desc Replace password
+ *@method POST
+ */
+ Router.post('/replace-password', [
+     auth, 
+     check('password', 'Password is required').not().isEmpty(),
+     check('confirm_password', 'Confirm password is required').not().isEmpty()
+ ], (req, res) => {
+     const errors = validationResult(req);
+     if(!errors.isEmpty()) return  res.status(400).json({ errors: errors.array() })
+
+     const { password, confirm_password } = req.body
+
+     const newPassword = {
+         password: password
+     }
+
+     try {
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(password, salt, (err, hash) => {
+                if(err) throw err;
+                newPassword.password = hash;
+                console.log(newPassword.password)
+                let sql = `UPDATE t_owner SET password = '${newPassword.password}' WHERE email_owner = '${req.user.email}'`;
+                db.query(sql, (err, results) => {
+                    if(err) return res.status(400).json({ msg: 'Something wrong' });
+
+                    res.json({ status: 1, msg: 'Password has been changed , Please Sign in again ' });
+                })
+
+            })
+        })
+
+    
+     } catch (err) {
+         console.log(err);
+         res.status(500).send('Server Error');
+     }
+
+
+ })
+
+
 
 
 

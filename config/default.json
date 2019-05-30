@@ -1,3 +1,5 @@
 {
-    "jwtSecret": "mySecretToken"
+    "jwtSecret": "mySecretToken",
+    "githubClientId": "b11fd7308d30d72ce570",
+    "githubClientSecret": "fc0d0ad056ec8fb964f5dddbe67913d442bdb204"
 }

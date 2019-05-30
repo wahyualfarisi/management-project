@@ -48,6 +48,7 @@ $(document).ready(function() {
             finish_day:  moment($('#finish_day').val()).format("YYYY-MM-DD"),
             name_project: $('#name_project').val(),
             githubrepo: $('#githubrepo').val(),
+            cost_project: $('#cost_project').val(),
             status_project: $('#status_project').val()
         }
         $.ajax({

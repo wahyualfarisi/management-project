@@ -31,10 +31,98 @@ function load_value_form(){
     })
 }
 
+function load_github_repo(){
+    $.ajax({
+        url: `/api/owner/github/${PARSEDATA.githubusername}`,
+        method: 'get',
+        dataType: 'json',
+        beforeSend: function(){
+            load_content();
+        },
+        success: function(data){
+            console.log(data);
+            var html = '';
+            if(data.length > 0){
+                data.forEach(item => {
+                    html += `
+                        <div id="list-group" class="widget-scroll" style="max-height:490px;">
+                          <ul class="reviews list-group w-100">
+                                <li class="list-group-item" style="margin-top: 20px;">
+                                    <div class="media">
+                                        <div class="media-body align-self-center">
+                                            <div class="username">
+                                                <h4><a href="${item.clone_url}" target="_blank"> ${item.full_name} </a> </h4>
+                                            </div>
+                                            <div class="msg">
+                                                <div class="stars">
+                                                    <i><button class="btn btn-info">Branch: ${item.default_branch} </button></i>
+                                                    <i class="la la-star"></i>
+                                                    <i class="la la-star"></i>
+                                                    <i class="la la-star"></i>
+                                                    <i class="la la-star-half-empty"></i>
+                                                </div>
+                                                <p>
+                                                    ${item.name} 
+                                                </p>
+                                                <p>
+                                                    created at: ${item.created_at}
+                                                </p>
+                                                <p>
+                                                    last update at: ${item.updated_at}
+                                                </p>
+                                            </div>
+                                            <div class="meta">
+                                                <span class="mr-3">30 minutes ago - 1 Reply</span>
+                                                <a href="#">Reply</a>
+                                            </div>
+                                        </div>
+                                        <div class="media-right pr-3 align-self-center">
+                                            <div class="like text-center">
+                                                <i class="ion-heart"></i>
+                                                <span>12</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                          </ul>
+                        </div>
+                    `;
+                })
+            }else{
+                html = 'No repository';
+            }
+            $('#show-github').html(html);
+        },
+        error: function(err){
+            $('#show-github').html(err.responseJSON.msg);
+        }
+    });
+}
+
+function load_content()
+{
+    var html;
+    html = `
+    <div class="progress mb-3">
+         <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="progress mb-3">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="progress mb-3">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    `;
+    $('#show-github').html(html);
+}
+
+
+
 
 
 $(document).ready(function($) {
     load_value_form()
+    load_github_repo();
 
     $(SettingDom.btnSaveChange).on('click', () => {
         var fullname, email, github, jobs;
@@ -61,7 +149,11 @@ $(document).ready(function($) {
                 success: function(data){
                     if(data.code === 1){
                         load_value_form()
-                        return notifications('Update successfully')
+                        localStorage.clear('privatesite');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2500);
+                        return notifications('Update successfully, Please Sign in Again')
                     }
                 },
                 error: function(err){
@@ -76,6 +168,6 @@ $(document).ready(function($) {
 
     })
 
-});
+});//end document ready functions
 
 

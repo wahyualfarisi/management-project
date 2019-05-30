@@ -24,6 +24,8 @@ Route.get('/', (req, res) => {
    return res.render('pages/form/form-create-project')
  });
 
+ Route.get('/change-password', (req, res) => res.render('pages/form/form-change-password'));
+
  Route.get('/invite-team', (req, res) => res.render('pages/form/form-invite-team'));
 
  Route.get("/setting", (req, res) => {

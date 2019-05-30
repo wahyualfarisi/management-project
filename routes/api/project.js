@@ -24,12 +24,13 @@ Route.post('/',[
     check('finish_day', 'Finish Day is required').not().isEmpty(),
     check('name_project', 'Name Of Project is required').not().isEmpty(),
     check('githubrepo', 'Url is not valid').not().isEmpty().isURL(),
-    check('status_project', 'Status project is required').not().isEmpty()
+    check('status_project', 'Status project is required').not().isEmpty(),
+    check('cost_project', 'Cost of project is required').not().isEmpty()
 ], (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-    const { start_day, finish_day, name_project, githubrepo, status_project } = req.body;
+    const { start_day, finish_day, name_project, githubrepo, cost_project, status_project } = req.body;
 
     const newProject = {
         kode_project: uuid.v4(),
@@ -37,6 +38,7 @@ Route.post('/',[
         finish_day: finish_day,
         name_of_project: name_project,
         githubrepo: githubrepo,
+        cost_project: cost_project,
         status_project: status_project,
         email_owner: req.user.email
     }
@@ -44,7 +46,7 @@ Route.post('/',[
     try {
         let sql = `
                   INSERT INTO t_project 
-                    (kode_project, start_day, finish_day,name_of_project, githubrepo, status_project, email_owner) 
+                    (kode_project, start_day, finish_day,name_of_project, githubrepo, cost_project, status_project, email_owner) 
                   VALUES
                     (
                         '${newProject.kode_project}',
@@ -52,6 +54,7 @@ Route.post('/',[
                         '${newProject.finish_day}',
                         '${newProject.name_of_project}',
                         '${newProject.githubrepo}',
+                        '${newProject.cost_project}',
                         '${newProject.status_project}',
                         '${newProject.email_owner}'
                     )`;
