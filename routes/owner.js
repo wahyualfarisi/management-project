@@ -12,13 +12,19 @@ Route.get('/', (req, res) => {
     
 })
 
-Route.get("/dashboard", (req, res) => {
+ Route.get("/dashboard", (req, res) => {
   return res.render('pages/home')
  });
 
- Route.get("/activity", (req, res) => {
-  return res.render('pages/activity')
+ Route.get('/project', (req, res) => {
+   return res.render('pages/project')
  });
+
+ Route.get('/create-project', (req, res) => {
+   return res.render('pages/form/form-create-project')
+ });
+
+ Route.get('/invite-team', (req, res) => res.render('pages/form/form-invite-team'));
 
  Route.get("/setting", (req, res) => {
   return res.render('pages/form/formsetting')

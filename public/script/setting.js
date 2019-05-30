@@ -51,7 +51,7 @@ $(document).ready(function($) {
                 jobs: jobs
             }
             $.ajax({
-                url: '/api/owner',
+                url: '/api/owner/updateprofile',
                 method: 'post',
                 data: JSON.stringify(data),
                 headers: {

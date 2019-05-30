@@ -7,8 +7,6 @@ const uuid = require('uuid');
 const db  = require('./../../config/db_config');
 const config = require('config');
 const auth = require('./../../middleware/auth');
-
-//import owner model
 const { check, validationResult } = require('express-validator/check');
 
 /**
@@ -16,7 +14,7 @@ const { check, validationResult } = require('express-validator/check');
  *@method POST
  */
 
-Router.post('/', [
+Router.post('/updateprofile', [
     auth,
     check('fullname', 'Fullname is required').not().isEmpty()
     ], (req, res) => {
