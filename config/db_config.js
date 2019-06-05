@@ -20,4 +20,4 @@ const db_production  = mysql.createConnection({
 //   console.log("connected");
 // });
 
-module.exports = db_development ;
+module.exports = db_production ;
